@@ -1,11 +1,20 @@
 import { Component } from 'react';
 import { createPortal } from 'react-dom';
+import PropTypes from 'prop-types';
 
 import styles from './Modal.module.css';
 
 const modalRoot = document.querySelector('#modal-root');
 
 export default class Modal extends Component {
+  static propTypes = {
+    image: PropTypes.shape({
+      largeImageURL: PropTypes.string.isRequired,
+      tags: PropTypes.string.isRequired,
+    }).isRequired,
+    onClose: PropTypes.func.isRequired,
+  };
+
   componentDidMount() {
     window.addEventListener('keydown', this.onKeyDownClose);
   }
@@ -29,10 +38,12 @@ export default class Modal extends Component {
   };
 
   render() {
+    const { image } = this.props;
+
     return createPortal(
       <div className={styles.Overlay} onClick={this.onOverlayClose}>
         <div className={styles.Modal}>
-          <img src={this.props.image} alt={this.props.name} />
+          <img src={image.largeImageURL} alt={image.tags} />
         </div>
       </div>,
       modalRoot,
